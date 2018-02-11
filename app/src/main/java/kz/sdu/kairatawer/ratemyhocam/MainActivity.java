@@ -2,26 +2,31 @@ package kz.sdu.kairatawer.ratemyhocam;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mSignout;
+    private BottomNavigationView mMainNav;
+    private FrameLayout mMainFrame;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private ExploreFragment exploreFragment;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mSignout = (Button) findViewById(R.id.btn_signout);
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -35,12 +40,36 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mSignout.setOnClickListener(new View.OnClickListener() {
+        mMainNav = (BottomNavigationView) findViewById(R.id.main_nav);
+        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
+
+        exploreFragment = new ExploreFragment();
+        profileFragment = new ProfileFragment();
+
+        mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                startSignout();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_explore:
+                        setFragment(exploreFragment);
+                        return true;
+                    case R.id.action_profile:
+                        setFragment(profileFragment);
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
+
+    }
+
+    private void setFragment(Fragment fragment) {
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame,fragment);
+        fragmentTransaction.commit();
+
     }
 
     private void startSignout() {
