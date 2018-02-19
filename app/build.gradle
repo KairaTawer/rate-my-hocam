@@ -41,7 +41,11 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.romainpiel.shimmer:library:1.4.0@aar'
 
+    compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    compile "com.android.support:design:26.1.0"
+    compile 'com.jaredrummler:material-spinner:1.2.4'
 }
+
 
 
 

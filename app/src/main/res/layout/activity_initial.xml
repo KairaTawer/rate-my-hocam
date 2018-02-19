@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="signUpClicker"
+            type="android.view.View.OnClickListener"/>
+        <variable
+            name="logInClicker"
+            type="android.view.View.OnClickListener"/>
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_bg"
+        tools:context="kz.sdu.kairatawer.ratemyhocam.activities.InitialActivity">
+
+
+        <ImageView
+            android:id="@+id/imageView_logo"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:transitionName="imageTransition"
+            app:srcCompat="@drawable/logo" />
+
+        <Button
+            android:id="@+id/button_signUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView_logo"
+            android:onClickListener="@{signUpClicker}"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="80dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/signup_btn_bg"
+            android:text="РЕГИСТРАЦИЯ" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_signUp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:text="Есть аккаунта?"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/button_signIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="80dp"
+            android:layout_marginStart="80dp"
+            android:onClickListener="@{logInClicker}"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/login_btn_bg"
+            android:text="ВОЙТИ"
+            android:textColor="@android:color/white" />
+
+
+    </RelativeLayout>
+
+
+</layout>

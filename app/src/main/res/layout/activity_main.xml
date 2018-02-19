@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="kz.sdu.kairatawer.ratemyhocam.activities.MainActivity">
+<layout>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/main_nav"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/nav_items">
-
-    </android.support.design.widget.BottomNavigationView>
-
-    <FrameLayout
-        android:id="@+id/main_frame"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_nav"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        tools:context="kz.sdu.kairatawer.ratemyhocam.activities.MainActivity">
 
-    </FrameLayout>
+        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+            android:id="@+id/main_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#F5F5F5"
+            app:menu="@menu/nav_items" />
 
-</RelativeLayout>
+        <FrameLayout
+            android:id="@+id/main_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/main_nav"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</layout>

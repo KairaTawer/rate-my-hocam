@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.fragments.ExploreFragment;
@@ -20,7 +21,7 @@ import kz.sdu.kairatawer.ratemyhocam.fragments.ProfileFragment;
 public class MainActivity extends AppCompatActivity
         implements ExploreFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener {
 
-    private BottomNavigationView mMainNav;
+    private BottomNavigationViewEx mMainNav;
     private FrameLayout mMainFrame;
 
     private FirebaseAuth mAuth;
@@ -39,18 +40,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() == null) {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent loginIntent = new Intent(MainActivity.this, InitialActivity.class);
                     loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(loginIntent);
                 }
             }
         };
 
-        mMainNav = (BottomNavigationView) findViewById(R.id.main_nav);
+        mMainNav = (BottomNavigationViewEx) findViewById(R.id.main_nav);
         mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
 
         exploreFragment = new ExploreFragment();
         profileFragment = new ProfileFragment();
+
+        mMainNav.enableAnimation(false);
+        mMainNav.enableShiftingMode(false);
+        mMainNav.enableItemShiftingMode(false);
+        mMainNav.setTextVisibility(false);
 
         mMainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
