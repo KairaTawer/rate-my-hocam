@@ -1,4 +1,4 @@
-package kz.sdu.kairatawer.ratemyhocam;
+package kz.sdu.kairatawer.ratemyhocam.models;
 
 import android.app.Application;
 

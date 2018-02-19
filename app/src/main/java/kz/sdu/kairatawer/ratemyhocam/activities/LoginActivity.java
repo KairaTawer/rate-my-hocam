@@ -1,4 +1,4 @@
-package kz.sdu.kairatawer.ratemyhocam;
+package kz.sdu.kairatawer.ratemyhocam.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,32 +18,32 @@ import com.google.firebase.auth.FirebaseUser;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
-public class SignupActivity extends AppCompatActivity {
+import kz.sdu.kairatawer.ratemyhocam.R;
+
+public class LoginActivity extends AppCompatActivity {
 
     private ShimmerTextView mShimmerTextView;
-    private EditText mEmail, mPassword, mConfirmPassword;
-    private Button mLogin, mSignup;
+    private EditText mEmail,mPassword;
+    private Button mLogin,mSignup,mForgot;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private Shimmer mShimmer;
 
-    String email, password, confirmPassword;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
         mShimmerTextView = (ShimmerTextView) findViewById(R.id.shimmer_tv);
         mEmail = (EditText) findViewById(R.id.et_email);
         mPassword = (EditText) findViewById(R.id.et_password);
-        mConfirmPassword = (EditText) findViewById(R.id.et_retype_password);
         mLogin = (Button) findViewById(R.id.btn_login);
         mSignup = (Button) findViewById(R.id.btn_signup);
+        mForgot = (Button) findViewById(R.id.btn_forgot_password);
 
         mShimmer = new Shimmer();
         mShimmer.start(mShimmerTextView);
@@ -51,55 +51,43 @@ public class SignupActivity extends AppCompatActivity {
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signupIntent = new Intent(SignupActivity.this, LoginActivity.class);
-                startActivity(signupIntent);
+                startLogin();
             }
         });
 
         mSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startSignup();
+                Intent signupIntent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(signupIntent);
             }
         });
     }
 
-    private void startSignup() {
+    private void startLogin() {
 
-        if(startValidate()) {
-            mAuth.createUserWithEmailAndPassword(email, password)
+        String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
+
+        if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+            mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Intent mainIntent = new Intent(SignupActivity.this,MainActivity.class);
+                                Intent mainIntent = new Intent(LoginActivity.this,MainActivity.class);
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(mainIntent);
                             } else {
-                                Toast.makeText(SignupActivity.this, "Authentication failed.",
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-        }
-    }
-
-    private Boolean startValidate() {
-        email = mEmail.getText().toString();
-        password = mPassword.getText().toString();
-        confirmPassword = mConfirmPassword.getText().toString();
-
-        if(!password.equals(confirmPassword)) {
-            //Toast.makeText(SignupActivity.this,"",Toast.LENGTH_LONG).show();
-            mConfirmPassword.setError("Passwords must be the same");
-            return false;
-        } else if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
-            Toast.makeText(SignupActivity.this,"Fields are empty",Toast.LENGTH_LONG).show();
-            return false;
         } else {
-            return true;
+            Toast.makeText(LoginActivity.this, "Fields are empty.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
-
 }

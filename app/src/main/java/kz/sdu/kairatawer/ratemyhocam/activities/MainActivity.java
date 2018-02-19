@@ -1,6 +1,7 @@
-package kz.sdu.kairatawer.ratemyhocam;
+package kz.sdu.kairatawer.ratemyhocam.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -12,7 +13,12 @@ import android.widget.FrameLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity {
+import kz.sdu.kairatawer.ratemyhocam.R;
+import kz.sdu.kairatawer.ratemyhocam.fragments.ExploreFragment;
+import kz.sdu.kairatawer.ratemyhocam.fragments.ProfileFragment;
+
+public class MainActivity extends AppCompatActivity
+        implements ExploreFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView mMainNav;
     private FrameLayout mMainFrame;
@@ -72,17 +78,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startSignout() {
-        mAuth.signOut();
-        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(loginIntent);
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
 
         mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }
