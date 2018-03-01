@@ -2,16 +2,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="kz.sdu.kairatawer.ratemyhocam.fragments.ExploreFragment">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <ImageView
+            android:id="@+id/imageView_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:src="@drawable/sdu_only" />
+
+        <LinearLayout
+            android:id="@+id/layout_buttons"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageView_logo"
+            android:orientation="horizontal">
 
-    </FrameLayout>
+            <Button
+                android:id="@+id/button_engineering"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/button_law"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/button_business"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null" />
+
+            <Button
+                android:id="@+id/button_pedagogy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_teachers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_buttons" />
+
+    </RelativeLayout>
 
 </layout>

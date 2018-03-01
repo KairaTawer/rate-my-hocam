@@ -34,27 +34,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imageView_logo"
-
             android:layout_centerHorizontal="true"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/top_input_bg"
             android:hint="Email"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:textSize="14sp" />
 
         <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_below="@+id/et_email"
             android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:background="@drawable/bottom_input_bg"
             android:hint="Пароль"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
             android:textSize="14sp" />
 
         <Button
