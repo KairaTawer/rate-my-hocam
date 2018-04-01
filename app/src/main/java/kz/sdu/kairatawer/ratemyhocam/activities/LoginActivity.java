@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,10 +28,12 @@ import com.romainpiel.shimmer.ShimmerTextView;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.databinding.ActivityLoginBinding;
+import kz.sdu.kairatawer.ratemyhocam.ui.AuthDialog;
 
 public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding binding;
+    AuthDialog mDialog;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -84,8 +88,8 @@ public class LoginActivity extends AppCompatActivity {
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(mainIntent);
                             } else {
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                mDialog = new AuthDialog();
+                                mDialog.showDialog(LoginActivity.this,task.getException().getMessage());
                             }
                         }
                     });

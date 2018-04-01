@@ -24,6 +24,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.databinding.ActivitySignupBinding;
 import kz.sdu.kairatawer.ratemyhocam.models.User;
+import kz.sdu.kairatawer.ratemyhocam.ui.AuthDialog;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class SignupActivity extends AppCompatActivity {
 
     String email, password;
     int facultyId = 999999,graduateYear = 999999;
+
+    AuthDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +102,8 @@ public class SignupActivity extends AppCompatActivity {
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(mainIntent);
                             } else {
-                                Toast.makeText(SignupActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                mDialog = new AuthDialog();
+                                mDialog.showDialog(SignupActivity.this,task.getException().getMessage());
                             }
                         }
                     });

@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        mMainNav = (BottomNavigationViewEx) findViewById(R.id.main_nav);
-        mMainFrame = (FrameLayout) findViewById(R.id.main_frame);
+        mMainNav = findViewById(R.id.main_nav);
+        mMainFrame = findViewById(R.id.main_frame);
 
         exploreFragment = new ExploreFragment();
         profileFragment = new ProfileFragment();

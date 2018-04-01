@@ -48,7 +48,7 @@
             android:layout_below="@+id/button_signUp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="32dp"
-            android:text="Есть аккаунта?"
+            android:text="Есть аккаунт?"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
 
