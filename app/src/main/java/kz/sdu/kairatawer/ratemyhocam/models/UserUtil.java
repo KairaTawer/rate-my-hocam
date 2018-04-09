@@ -4,7 +4,7 @@ package kz.sdu.kairatawer.ratemyhocam.models;
  * Created by асус on 19.02.2018.
  */
 
-public class User {
+public class UserUtil {
     private int graduateYear, faculty;
     private boolean isAdmin;
 
@@ -32,7 +32,7 @@ public class User {
         isAdmin = admin;
     }
 
-    public User(int graduateYear, int faculty, boolean isAdmin) {
+    public UserUtil(int graduateYear, int faculty, boolean isAdmin) {
         this.graduateYear = graduateYear;
         this.faculty = faculty;
         this.isAdmin = isAdmin;

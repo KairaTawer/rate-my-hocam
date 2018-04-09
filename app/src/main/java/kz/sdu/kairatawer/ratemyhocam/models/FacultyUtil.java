@@ -6,10 +6,10 @@ import java.util.HashMap;
  * Created by асус on 19.02.2018.
  */
 
-public class Faculties {
+public class FacultyUtil {
     public HashMap<Integer,String> facultyList;
 
-    public Faculties() {
+    public FacultyUtil() {
         facultyList.put(0,"Engineering and Natural Sciences");
         facultyList.put(1,"Law and Social Science");
         facultyList.put(2,"Education and Humanity");

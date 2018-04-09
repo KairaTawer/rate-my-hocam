@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "766313126602-snmgc1rihrpmqdcq0prs0m5m4oo94tpc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kz.sdu.kairatawer.ratemyhocam",
+            "certificate_hash": "9f236a00a8cce64270ac5790a21307eeba5ab117"
+          }
+        },
+        {
           "client_id": "766313126602-pd7l2ocaurt14or95dt4tqdej9l25ga9.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766313126602-pd7l2ocaurt14or95dt4tqdej9l25ga9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

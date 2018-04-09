@@ -47,11 +47,14 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
+
         mMainNav = findViewById(R.id.main_nav);
         mMainFrame = findViewById(R.id.main_frame);
 
         exploreFragment = new ExploreFragment();
         profileFragment = new ProfileFragment();
+
+        setFragment(exploreFragment);
 
         mMainNav.enableAnimation(false);
         mMainNav.enableShiftingMode(false);

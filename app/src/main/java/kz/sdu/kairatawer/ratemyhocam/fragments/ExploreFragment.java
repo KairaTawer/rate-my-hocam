@@ -1,75 +1,139 @@
 package kz.sdu.kairatawer.ratemyhocam.fragments;
 
-import android.content.Context;
+
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
+import kz.sdu.kairatawer.ratemyhocam.activities.LoginActivity;
+import kz.sdu.kairatawer.ratemyhocam.activities.ViewAllActivity;
+import kz.sdu.kairatawer.ratemyhocam.adapters.TeachersAdapter;
+import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class ExploreFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    private String mParam1;
-    private String mParam2;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private OnFragmentInteractionListener mListener;
+    RecyclerView mEngineeringList;
+    TeachersAdapter adapter;
+    Button mViewAllButton;
 
-    public ExploreFragment() {
-    }
+    ArrayList<Teacher> teachers = new ArrayList<>();
 
-    public static ExploreFragment newInstance(String param1, String param2) {
+    public ExploreFragment() {}
+
+    public static ExploreFragment newInstance() {
         ExploreFragment fragment = new ExploreFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser() == null) {
+                    Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(loginIntent);
+                }
+            }
+        };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_explore, container, false);
-    }
+        View view =  inflater.inflate(R.layout.fragment_explore, container, false);
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+        mEngineeringList = view.findViewById(R.id.recyclerView_eng);
+        mViewAllButton = view.findViewById(R.id.button_viewAll);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        mViewAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ViewAllActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return view;
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mEngineeringList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mEngineeringList.setHasFixedSize(true);
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("/Teacher");
+
+        Query query = mDatabase.orderByChild("rating").limitToLast(5);
+
+        ValueEventListener eventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Teacher teacher = ds.getValue(Teacher.class);
+                    Log.d("TAG", teacher.getName());
+                    teacher.setId(ds.getKey());
+                    teachers.add(teacher);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        query.addListenerForSingleValueEvent(eventListener);
+
+        adapter = new TeachersAdapter(getActivity(), teachers);
+        mEngineeringList.setAdapter(adapter);
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(Uri uri);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
 }
