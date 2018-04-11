@@ -23,7 +23,9 @@
         <activity android:name=".activities.SignupActivity" />
         <activity android:name=".activities.InitialActivity" />
         <activity android:name=".activities.ViewAllActivity" />
-        <activity android:name=".activities.TeacherProfileActivity"></activity>
+        <activity android:name=".activities.TeacherProfileActivity" />
+        <activity android:name=".activities.RateTeacherActivity" />
+        <activity android:name=".activities.AfterRatingActivity"></activity>
     </application>
 
 </manifest>

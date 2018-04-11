@@ -27,6 +27,7 @@ import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 
 public class ViewAllActivity extends AppCompatActivity {
 
+    Toolbar mToolbar;
     RecyclerView mRecyclerViewAll;
 
     FirebaseRecyclerAdapter adapter;
@@ -38,10 +39,12 @@ public class ViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Engineering Faculty");
-
+        mToolbar = findViewById(R.id.toolbar_actionbar);
         mRecyclerViewAll = findViewById(R.id.recyclerView_all);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Engineering Faculty");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRecyclerViewAll.setLayoutManager(new LinearLayoutManager(this));
 
@@ -69,6 +72,7 @@ public class ViewAllActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull TeacherViewHolder holder, int position, @NonNull Teacher model) {
                 holder.setName(model.getName());
                 holder.setRating(model.getRating() + "");
+                holder.setPosition(model.getPosition());
                 teacherId = getRef(position).getKey();
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -87,9 +91,11 @@ public class ViewAllActivity extends AppCompatActivity {
     public static class TeacherViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
+        public Button mRateButton;
         public TeacherViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
+            mRateButton = mView.findViewById(R.id.button_rate_teacher);
         }
 
         public void setRating(String rating) {
@@ -104,6 +110,12 @@ public class ViewAllActivity extends AppCompatActivity {
             mRating.setText(name);
         }
 
+        public void setPosition(String position) {
+            TextView mPosition = mView.findViewById(R.id.textView_teacher_position);
+
+            mPosition.setText(position);
+        }
+
     }
 
 
@@ -111,9 +123,7 @@ public class ViewAllActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
+                finish();
         }
         return super.onOptionsItemSelected(item);
     }

@@ -8,6 +8,10 @@
         android:layout_height="match_parent"
         tools:context="kz.sdu.kairatawer.ratemyhocam.activities.MainActivity">
 
+        <include
+            android:id="@+id/toolbar_actionbar"
+            layout="@layout/toolbar_logo" />
+
         <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
             android:id="@+id/main_nav"
             android:layout_width="match_parent"
@@ -21,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/main_nav"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/toolbar_actionbar"
             android:layout_centerHorizontal="true">
 
         </FrameLayout>

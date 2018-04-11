@@ -69,6 +69,8 @@ public class ExploreFragment extends Fragment {
                 }
             }
         };
+
+        Log.e("onCreate","onCreate");
     }
 
     @Override
@@ -87,6 +89,8 @@ public class ExploreFragment extends Fragment {
             }
         });
 
+        Log.e("onCreateView","onCreateView");
+
         return view;
     }
 
@@ -94,13 +98,19 @@ public class ExploreFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mEngineeringList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mEngineeringList.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
         mEngineeringList.setHasFixedSize(true);
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("/Teacher");
 
         Query query = mDatabase.orderByChild("rating").limitToLast(5);
 
+        teachers.clear();
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

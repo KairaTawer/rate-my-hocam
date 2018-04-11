@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
+import kz.sdu.kairatawer.ratemyhocam.activities.RateTeacherActivity;
 import kz.sdu.kairatawer.ratemyhocam.activities.TeacherProfileActivity;
 import kz.sdu.kairatawer.ratemyhocam.activities.ViewAllActivity;
 import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
@@ -35,14 +36,25 @@ public class TeachersAdapter extends RecyclerView.Adapter<ViewAllActivity.Teache
 
     @Override
     public void onBindViewHolder(@NonNull final ViewAllActivity.TeacherViewHolder holder, final int position) {
-        holder.setName(teachers.get(position).getName());
-        holder.setRating(teachers.get(position).getRating() + "");
+        final Teacher currentTeacher = teachers.get(position);
+        holder.setName(currentTeacher.getName());
+        holder.setPosition(currentTeacher.getPosition());
+        if(currentTeacher.getRatingCount() != 0)    holder.setRating(currentTeacher.getRating() + "");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TeacherProfileActivity.class);
-                intent.putExtra("teacherId", teachers.get(position).getId());
+                intent.putExtra("teacherId", currentTeacher.getId());
                 context.startActivity(intent);
+            }
+        });
+        holder.mRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent rateIntent = new Intent(context, RateTeacherActivity.class);
+                rateIntent.putExtra("teacherId", currentTeacher.getId());
+                rateIntent.putExtra("teacherName", currentTeacher.getName());
+                context.startActivity(rateIntent);
             }
         });
     }
