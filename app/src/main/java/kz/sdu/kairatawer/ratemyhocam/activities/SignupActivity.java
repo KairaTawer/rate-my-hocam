@@ -23,7 +23,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.databinding.ActivitySignupBinding;
-import kz.sdu.kairatawer.ratemyhocam.models.UserUtil;
+import kz.sdu.kairatawer.ratemyhocam.models.Users;
 import kz.sdu.kairatawer.ratemyhocam.ui.AuthDialog;
 
 public class SignupActivity extends AppCompatActivity {
@@ -96,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser();
 
                                 mDatabase.child("Users")
-                                        .child(user.getUid()).setValue(new UserUtil(graduateYear,facultyId,false));
+                                        .child(user.getUid()).setValue(new Users(graduateYear,facultyId,false));
 
                                 Intent mainIntent = new Intent(SignupActivity.this,MainActivity.class);
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -25,7 +25,8 @@
         <activity android:name=".activities.ViewAllActivity" />
         <activity android:name=".activities.TeacherProfileActivity" />
         <activity android:name=".activities.RateTeacherActivity" />
-        <activity android:name=".activities.AfterRatingActivity"></activity>
+        <activity android:name=".activities.AfterRatingActivity" />
+        <activity android:name=".activities.RatingAcceptActivity"></activity>
     </application>
 
 </manifest>

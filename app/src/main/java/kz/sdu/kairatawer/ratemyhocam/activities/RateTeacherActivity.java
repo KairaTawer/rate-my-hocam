@@ -1,12 +1,18 @@
 package kz.sdu.kairatawer.ratemyhocam.activities;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +63,8 @@ public class RateTeacherActivity extends AppCompatActivity {
     ToggleSwitch mTakeAgainSwitch;
     @BindView(R.id.editText_comment)
     EditText mComment;
+    @BindView(R.id.textView_commentLength)
+    TextView mCommentLength;
     @BindView(R.id.button_rateProfessor)
     Button mRateButton;
 
@@ -120,6 +128,7 @@ public class RateTeacherActivity extends AppCompatActivity {
 
         teacherId = getIntent().getStringExtra("teacherId");
         Query query = teacherRef.orderByKey().equalTo(teacherId);
+        getSupportActionBar().setTitle("");
 
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
@@ -128,6 +137,7 @@ public class RateTeacherActivity extends AppCompatActivity {
                     teacher = ds.getValue(Teacher.class);
                     teacher.setId(ds.getKey());
                 }
+                getSupportActionBar().setTitle(teacher.getName());
             }
 
             @Override
@@ -135,7 +145,6 @@ public class RateTeacherActivity extends AppCompatActivity {
         };
         query.addListenerForSingleValueEvent(eventListener);
 
-        getSupportActionBar().setTitle(teacher.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -145,6 +154,24 @@ public class RateTeacherActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 commitRating();
+            }
+        });
+
+        mComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mCommentLength.setText(String.valueOf(s.length()) + "/200");
+                if(s.length() == 200) mCommentLength.setTextColor(Color.RED);
             }
         });
 
@@ -175,10 +202,25 @@ public class RateTeacherActivity extends AppCompatActivity {
         Rating ratingRecord = new Rating(key, mAuth.getCurrentUser().getUid(), courseCode, comment, teacherId, rating, difficulty, attendance, takeAgain, false);
 
         ratingRef.child(key).setValue(ratingRecord);//this creates the reqs key-value pair
-        teacherRef.child(teacher.getId()).child("ratingCount").setValue(teacher.getRatingCount() + 1);
-        teacherRef.child(teacher.getId()).child("rating").setValue((teacher.getRating() + rating)/(teacher.getRatingCount() + 1));
 
+        final AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle("Thanks for rating!");
+        builder.setMessage("Your rating is in processing, it may take an hour to display");
+        builder.setPositiveButton("OK", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
 
+        builder.show();
 
     }
 

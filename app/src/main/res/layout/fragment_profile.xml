@@ -1,13 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="kz.sdu.kairatawer.ratemyhocam.fragments.ProfileFragment">
 
-    <Button
-        android:id="@+id/button_signOut"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView_adminBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SIGN OUT"/>
+        android:visibility="gone">
 
-</FrameLayout>
+        <Button
+            android:id="@+id/button_notAcceptedComments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Comments"
+            android:padding="16dp"
+            android:gravity="start|center_vertical"
+            android:background="?android:attr/selectableItemBackground" />
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_margin="16dp"
+        android:id="@+id/button_signOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cardView_adminBar"
+        android:layout_centerHorizontal="true"
+        android:text="SIGN OUT" />
+
+</RelativeLayout>

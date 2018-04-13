@@ -2,28 +2,36 @@ package kz.sdu.kairatawer.ratemyhocam.models;
 
 public class Teacher {
 
+    private String id, name, position, image;
+    private int facultyId, ratingCount;
+    private float rating;
+
+    public Teacher() {
+    }
+
+    public Teacher(String name, String position, String image, int facultyId, float rating, int ratingCount) {
+        this.name = name;
+        this.position = position;
+        this.image = image;
+        this.facultyId = facultyId;
+        this.rating = rating;
+        this.ratingCount = ratingCount;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    private String id, name, position;
-    private int facultyId;
-
-    private int ratingCount;
-    private float rating;
-
-    public Teacher() {}
-
-    public Teacher(String name, String position, int facultyId, float rating, int ratingCount) {
-        this.name = name;
-        this.position = position;
-        this.facultyId = facultyId;
-        this.rating = rating;
-        this.ratingCount = ratingCount;
     }
 
     public String getName() {
@@ -49,6 +57,7 @@ public class Teacher {
     public void setRating(float rating) {
         this.rating = rating;
     }
+
     public String getPosition() {
         return position;
     }

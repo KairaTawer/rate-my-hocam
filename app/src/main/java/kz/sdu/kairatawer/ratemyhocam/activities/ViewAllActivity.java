@@ -82,9 +82,11 @@ public class ViewAllActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
             }
         };
 
+        adapter.notifyDataSetChanged();
         mRecyclerViewAll.setAdapter(adapter);
     }
 
