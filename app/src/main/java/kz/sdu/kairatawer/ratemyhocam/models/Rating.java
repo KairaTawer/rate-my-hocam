@@ -3,13 +3,12 @@ package kz.sdu.kairatawer.ratemyhocam.models;
 public class Rating {
 
     private String id, userId, courseCode, comment, teacherId;
-    private int difficulty, attendance, takeAgain;
-    private boolean accepted;
+    private int difficulty, attendance, takeAgain, status;
     private float rating;
 
     public Rating() {}
 
-    public Rating(String id, String userId, String courseCode, String comment, String teacherId, float rating, int difficulty, int attendance, int takeAgain, boolean isAccepted) {
+    public Rating(String id, String userId, String courseCode, String comment, String teacherId, float rating, int difficulty, int attendance, int takeAgain, int status) {
         this.id = id;
         this.userId = userId;
         this.courseCode = courseCode;
@@ -19,15 +18,15 @@ public class Rating {
         this.difficulty = difficulty;
         this.attendance = attendance;
         this.takeAgain = takeAgain;
-        this.accepted = isAccepted;
+        this.status = status;
     }
 
-    public boolean isAccepted() {
-        return accepted;
+    public int getStatus() {
+        return status;
     }
 
-    public void setAccepted(boolean accepted) {
-        accepted = accepted;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getTeacherId() {

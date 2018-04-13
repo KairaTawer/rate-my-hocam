@@ -87,7 +87,7 @@ public class ProfileFragment extends Fragment {
         };
         query.addListenerForSingleValueEvent(eventListener);
 
-        Query ratingQuery = ratingRef.orderByChild("accepted").equalTo(false);
+        Query ratingQuery = ratingRef.orderByChild("status").equalTo(0);
 
         ValueEventListener ratingEventListener = new ValueEventListener() {
             @Override

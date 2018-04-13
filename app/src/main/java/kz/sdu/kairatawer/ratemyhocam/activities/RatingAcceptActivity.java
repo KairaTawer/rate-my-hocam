@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +45,8 @@ public class RatingAcceptActivity extends AppCompatActivity {
     DatabaseReference ratingRef, teacherRef;
     FirebaseRecyclerAdapter adapter;
 
+    Teacher teacher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +65,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
         ratingRef = FirebaseDatabase.getInstance().getReference("Rating");
         teacherRef = FirebaseDatabase.getInstance().getReference("Teacher");
 
-        Query ratingQuery = ratingRef.orderByChild("accepted").equalTo(false);
+        Query ratingQuery = ratingRef.orderByChild("status").equalTo(0);
 
         FirebaseRecyclerOptions<Rating> options =
                 new FirebaseRecyclerOptions.Builder<Rating>()
@@ -79,15 +84,21 @@ public class RatingAcceptActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final RatingViewHolder holder, int position, @NonNull Rating model) {
+            protected void onBindViewHolder(@NonNull final RatingViewHolder holder, int position, @NonNull final Rating model) {
                 holder.setRating(String.valueOf(model.getRating()));
                 holder.setComment(model.getComment());
+
+                holder.mRejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ratingRef.child(model.getId()).child("status").setValue(-1);
+                    }
+                });
 
                 teacherRef.orderByKey().equalTo(model.getTeacherId())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Teacher teacher = null;
                                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                     teacher = ds.getValue(Teacher.class);
                                     teacher.setId(ds.getKey());
@@ -101,26 +112,33 @@ public class RatingAcceptActivity extends AppCompatActivity {
 
                             }
                         });
+
+                holder.mAcceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ratingRef.child(model.getId()).child("status").setValue(1);
+
+                        teacherRef.child(model.getTeacherId()).child("ratingCount").setValue(teacher.getRatingCount());
+                    }
+                });
             }
         };
+
         mRatingsList.setAdapter(adapter);
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
     public static class RatingViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView mImage;
+        private ImageView mImage;
 
+        public ImageButton mAcceptButton, mRejectButton;
         public RatingViewHolder(View itemView) {
             super(itemView);
 
             mImage = itemView.findViewById(R.id.imageView_teacher);
+            mAcceptButton = itemView.findViewById(R.id.button_acceptRating);
+            mRejectButton = itemView.findViewById(R.id.button_rejectRating);
         }
 
         public void setRating(String rating) {
@@ -147,6 +165,27 @@ public class RatingAcceptActivity extends AppCompatActivity {
             mComment.setText(comment);
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        adapter.stopListening();
+        super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

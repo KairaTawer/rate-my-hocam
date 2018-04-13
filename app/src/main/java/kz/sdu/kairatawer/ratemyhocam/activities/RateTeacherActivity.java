@@ -199,7 +199,7 @@ public class RateTeacherActivity extends AppCompatActivity {
 
         String key =  ratingRef.push().getKey();
 
-        Rating ratingRecord = new Rating(key, mAuth.getCurrentUser().getUid(), courseCode, comment, teacherId, rating, difficulty, attendance, takeAgain, false);
+        Rating ratingRecord = new Rating(key, mAuth.getCurrentUser().getUid(), courseCode, comment, teacherId, rating, difficulty, attendance, takeAgain, 0);
 
         ratingRef.child(key).setValue(ratingRecord);//this creates the reqs key-value pair
 
