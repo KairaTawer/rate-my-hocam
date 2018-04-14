@@ -32,7 +32,6 @@ public class ProfileFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference ratingRef, teacherRef;
     Users userUtil;
-    int ratingCount = 0;
 
     public ProfileFragment() {
 
@@ -71,9 +70,7 @@ public class ProfileFragment extends Fragment {
         final CardView mAdminPanel = view.findViewById(R.id.cardView_adminBar);
         final Button mAcceptCommentButton = view.findViewById(R.id.button_notAcceptedComments);
 
-        Query query = teacherRef.orderByKey().equalTo(mAuth.getCurrentUser().getUid());
-
-        ValueEventListener eventListener = new ValueEventListener() {
+        teacherRef.orderByKey().equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -84,24 +81,17 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        };
-        query.addListenerForSingleValueEvent(eventListener);
+        });
 
-        Query ratingQuery = ratingRef.orderByChild("status").equalTo(0);
-
-        ValueEventListener ratingEventListener = new ValueEventListener() {
+        ratingRef.orderByChild("status").equalTo(0).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    ratingCount++;
-                    mAcceptCommentButton.setText("New Ratings  \u2022  " + ratingCount);
-                }
+                mAcceptCommentButton.setText("New Ratings  \u2022  " + dataSnapshot.getChildrenCount());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        };
-        ratingQuery.addListenerForSingleValueEvent(ratingEventListener);
+        });
 
         mAcceptCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override

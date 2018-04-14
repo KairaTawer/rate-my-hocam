@@ -2,17 +2,20 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingTop="16dp">
 
         <ImageView
             android:id="@+id/imageView_teacher"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="Professor Name"
+            android:layout_marginEnd="16dp"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toRightOf="@id/imageView_teacher" />
@@ -51,6 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/loremIpsum"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageView_teacher" />
@@ -74,7 +80,7 @@
                 android:background="?android:attr/dividerVertical" />
 
             <ImageButton
-                android:id="@+id/button_acceptRating"
+                android:id="@+id/button_rejectRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -85,7 +91,7 @@
                 android:src="@drawable/ic_close_black_24dp" />
 
             <ImageButton
-                android:id="@+id/button_rejectRating"
+                android:id="@+id/button_acceptRating"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"

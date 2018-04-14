@@ -88,13 +88,6 @@ public class RatingAcceptActivity extends AppCompatActivity {
                 holder.setRating(String.valueOf(model.getRating()));
                 holder.setComment(model.getComment());
 
-                holder.mRejectButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ratingRef.child(model.getId()).child("status").setValue(-1);
-                    }
-                });
-
                 teacherRef.orderByKey().equalTo(model.getTeacherId())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -116,9 +109,19 @@ public class RatingAcceptActivity extends AppCompatActivity {
                 holder.mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        float updatedRatingAveral = teacher.getRatingAverall() + model.getRating();
+                        int updatedRatingCount = teacher.getRatingCount() + 1;
                         ratingRef.child(model.getId()).child("status").setValue(1);
+                        teacherRef.child(model.getTeacherId()).child("rating").setValue(updatedRatingAveral / updatedRatingCount);
+                        teacherRef.child(model.getTeacherId()).child("ratingAverall").setValue(updatedRatingAveral);
+                        teacherRef.child(model.getTeacherId()).child("ratingCount").setValue(updatedRatingCount);
+                    }
+                });
 
-                        teacherRef.child(model.getTeacherId()).child("ratingCount").setValue(teacher.getRatingCount());
+                holder.mRejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ratingRef.child(model.getId()).child("status").setValue(-1);
                     }
                 });
             }
@@ -156,7 +159,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
         public void setImage(String url) {
             mImage = itemView.findViewById(R.id.imageView_teacher);
 
-            Picasso.get().load(url).resize(56,56).centerCrop().transform(new CircleTransform()).into(mImage);
+            Picasso.get().load(url).resize(120,120).centerCrop().transform(new CircleTransform()).into(mImage);
         }
 
         public void setComment(String comment) {

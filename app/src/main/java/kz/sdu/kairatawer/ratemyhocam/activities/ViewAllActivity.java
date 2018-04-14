@@ -13,7 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v7.widget.Toolbar;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -21,16 +24,23 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.fragments.ExploreFragment;
 import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 
 public class ViewAllActivity extends AppCompatActivity {
 
+    @BindView(R.id.toolbar_actionbar)
     Toolbar mToolbar;
+    @BindView(R.id.recyclerView_all)
     RecyclerView mRecyclerViewAll;
+    @BindView(R.id.spinner_filter)
+    Spinner mFilterSpinner;
 
-    FirebaseRecyclerAdapter adapter;
+    FirebaseRecyclerAdapter alphabetAdapter, ratingAdapter;
 
     String teacherId;
 
@@ -39,8 +49,7 @@ public class ViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
 
-        mToolbar = findViewById(R.id.toolbar_actionbar);
-        mRecyclerViewAll = findViewById(R.id.recyclerView_all);
+        ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Engineering Faculty");
@@ -48,16 +57,48 @@ public class ViewAllActivity extends AppCompatActivity {
 
         mRecyclerViewAll.setLayoutManager(new LinearLayoutManager(this));
 
+        alphabetAdapter = getAdapter("name");
+
+        mRecyclerViewAll.setAdapter(alphabetAdapter);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.filter_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mFilterSpinner.setAdapter(adapter);
+
+        mFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(parent.getItemAtPosition(position).equals("Rating")) {
+                    if(ratingAdapter == null) {
+                        ratingAdapter = getAdapter("rating");
+                        ratingAdapter.startListening();
+                    }
+
+                    mRecyclerViewAll.setAdapter(ratingAdapter);
+                } else {
+                    mRecyclerViewAll.setAdapter(alphabetAdapter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private FirebaseRecyclerAdapter getAdapter(String filterOption) {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("/Teacher");
 
-        Query query = mDatabase.orderByChild("rating");
+        Query query = mDatabase.orderByChild(filterOption);
 
         FirebaseRecyclerOptions<Teacher> options =
                 new FirebaseRecyclerOptions.Builder<Teacher>()
                         .setQuery(query, Teacher.class)
                         .build();
 
-        adapter = new FirebaseRecyclerAdapter<Teacher, TeacherViewHolder>(options) {
+        FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<Teacher, TeacherViewHolder>(options) {
             @NonNull
             @Override
             public TeacherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,11 +110,12 @@ public class ViewAllActivity extends AppCompatActivity {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull TeacherViewHolder holder, int position, @NonNull Teacher model) {
+            protected void onBindViewHolder(@NonNull final TeacherViewHolder holder, int position, @NonNull final Teacher model) {
                 holder.setName(model.getName());
-                holder.setRating(model.getRating() + "");
+                holder.setRating(model.getRating());
                 holder.setPosition(model.getPosition());
                 teacherId = getRef(position).getKey();
+                model.setId(teacherId);
                 holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -82,12 +124,19 @@ public class ViewAllActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+                holder.mRateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent rateIntent = new Intent(ViewAllActivity.this, RateTeacherActivity.class);
+                        rateIntent.putExtra("teacherId", model.getId());
+                        startActivity(rateIntent);
+                    }
+                });
 
             }
         };
 
-        adapter.notifyDataSetChanged();
-        mRecyclerViewAll.setAdapter(adapter);
+        return adapter;
     }
 
     public static class TeacherViewHolder extends RecyclerView.ViewHolder {
@@ -100,10 +149,10 @@ public class ViewAllActivity extends AppCompatActivity {
             mRateButton = mView.findViewById(R.id.button_rate_teacher);
         }
 
-        public void setRating(String rating) {
+        public void setRating(float rating) {
             TextView mRating = mView.findViewById(R.id.textView_teacher_rating);
 
-            mRating.setText(rating);
+            if(rating != 0.0) mRating.setText(String.format("%.1f", rating));
         }
 
         public void setName(String name) {
@@ -120,25 +169,28 @@ public class ViewAllActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+            case R.id.action_filter:
+
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onStart() {
-        adapter.startListening();
+        alphabetAdapter.startListening();
+        if(ratingAdapter != null) ratingAdapter.startListening();
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        adapter.stopListening();
+        alphabetAdapter.stopListening();
+        if(ratingAdapter != null) ratingAdapter.stopListening();
         super.onStop();
     }
 }

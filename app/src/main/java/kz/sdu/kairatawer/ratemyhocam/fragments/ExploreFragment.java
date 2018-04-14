@@ -27,6 +27,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.activities.LoginActivity;
@@ -106,12 +108,9 @@ public class ExploreFragment extends Fragment {
         });
         mEngineeringList.setHasFixedSize(true);
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("/Teacher");
+        DatabaseReference teacherRef = FirebaseDatabase.getInstance().getReference().child("/Teacher");
 
-        Query query = mDatabase.orderByChild("rating").limitToLast(5);
-
-        teachers.clear();
-        ValueEventListener eventListener = new ValueEventListener() {
+        teacherRef.orderByChild("rating").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -121,12 +120,13 @@ public class ExploreFragment extends Fragment {
                     teachers.add(teacher);
                     adapter.notifyDataSetChanged();
                 }
+
+                Collections.reverse(teachers);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {}
-        };
-        query.addListenerForSingleValueEvent(eventListener);
+        });
 
         adapter = new TeachersAdapter(getActivity(), teachers);
         mEngineeringList.setAdapter(adapter);

@@ -4,18 +4,27 @@ public class Teacher {
 
     private String id, name, position, image;
     private int facultyId, ratingCount;
-    private float rating;
+    private float rating, ratingAverall;
 
     public Teacher() {
     }
 
-    public Teacher(String name, String position, String image, int facultyId, float rating, int ratingCount) {
+    public Teacher(String name, String position, String image, int facultyId, float rating, int ratingCount, float ratingAverall) {
         this.name = name;
         this.position = position;
         this.image = image;
         this.facultyId = facultyId;
         this.rating = rating;
         this.ratingCount = ratingCount;
+        this.ratingAverall = ratingAverall;
+    }
+
+    public float getRatingAverall() {
+        return ratingAverall;
+    }
+
+    public void setRatingAverall(float ratingAverall) {
+        this.ratingAverall = ratingAverall;
     }
 
     public String getImage() {

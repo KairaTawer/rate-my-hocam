@@ -180,7 +180,7 @@ public class RateTeacherActivity extends AppCompatActivity {
     public void commitRating() {
 
         String courseCode = mCourseCode.getText().toString();
-        int rating = mRatingBar.getNumStars();
+        float rating = mRatingBar.getRating();
         int difficulty = mDifficulty.getProgress() / 20;
         int attendance = mAttendanceSwitch.getCheckedTogglePosition();
         int takeAgain = mTakeAgainSwitch.getCheckedTogglePosition();
