@@ -13,7 +13,7 @@ import kz.sdu.kairatawer.ratemyhocam.R;
  * Date: 9/7/13 - 3:33 AM
  */
 public class ExpandableTextView extends android.support.v7.widget.AppCompatTextView {
-    private static final int DEFAULT_TRIM_LENGTH = 200;
+    private static final int DEFAULT_TRIM_LENGTH = 50;
     private static final String ELLIPSIS = ".....";
 
     private CharSequence originalText;

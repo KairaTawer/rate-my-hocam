@@ -43,6 +43,7 @@ public class ViewAllActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter alphabetAdapter, ratingAdapter;
 
     String teacherId;
+    LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,8 @@ public class ViewAllActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Engineering Faculty");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerViewAll.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        mRecyclerViewAll.setLayoutManager(layoutManager);
 
         alphabetAdapter = getAdapter("name");
 
@@ -75,8 +77,10 @@ public class ViewAllActivity extends AppCompatActivity {
                         ratingAdapter.startListening();
                     }
 
+                    reverseRecycler(true);
                     mRecyclerViewAll.setAdapter(ratingAdapter);
                 } else {
+                    reverseRecycler(false);
                     mRecyclerViewAll.setAdapter(alphabetAdapter);
                 }
             }
@@ -86,6 +90,14 @@ public class ViewAllActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void reverseRecycler(boolean toReverse) {
+
+        layoutManager.setReverseLayout(toReverse);
+        layoutManager.setStackFromEnd(toReverse);
+        mRecyclerViewAll.setLayoutManager(layoutManager);
+
     }
 
     private FirebaseRecyclerAdapter getAdapter(String filterOption) {

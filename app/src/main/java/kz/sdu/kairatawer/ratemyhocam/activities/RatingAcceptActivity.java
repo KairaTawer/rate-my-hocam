@@ -1,20 +1,18 @@
 package kz.sdu.kairatawer.ratemyhocam.activities;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -77,7 +75,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
             @Override
             public RatingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.rating_list_item, parent, false);
+                        .inflate(R.layout.rating_acceptance_list_item, parent, false);
 
                 return new RatingViewHolder(view);
 
@@ -106,6 +104,9 @@ public class RatingAcceptActivity extends AppCompatActivity {
                             }
                         });
 
+                holder.mAcceptButton = holder.itemView.findViewById(R.id.button_acceptRating);
+                holder.mRejectButton = holder.itemView.findViewById(R.id.button_rejectRating);
+
                 holder.mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -113,7 +114,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
                         int updatedRatingCount = teacher.getRatingCount() + 1;
                         ratingRef.child(model.getId()).child("status").setValue(1);
                         teacherRef.child(model.getTeacherId()).child("rating").setValue(updatedRatingAveral / updatedRatingCount);
-                        teacherRef.child(model.getTeacherId()).child("ratingAverall").setValue(updatedRatingAveral);
+                        teacherRef.child(model.getTeacherId()).child("ratingOverall").setValue(updatedRatingAveral);
                         teacherRef.child(model.getTeacherId()).child("ratingCount").setValue(updatedRatingCount);
                     }
                 });
@@ -136,18 +137,17 @@ public class RatingAcceptActivity extends AppCompatActivity {
         private ImageView mImage;
 
         public ImageButton mAcceptButton, mRejectButton;
+        public TextView mStatusTextView, mDateTextView;
         public RatingViewHolder(View itemView) {
             super(itemView);
 
             mImage = itemView.findViewById(R.id.imageView_teacher);
-            mAcceptButton = itemView.findViewById(R.id.button_acceptRating);
-            mRejectButton = itemView.findViewById(R.id.button_rejectRating);
         }
 
         public void setRating(String rating) {
-            TextView mRating = itemView.findViewById(R.id.textView_teacher_rating);
+            RatingBar mRating = itemView.findViewById(R.id.ratingBar_rating);
 
-            mRating.setText(rating);
+            mRating.setRating(Float.parseFloat(rating));
         }
 
         public void setName(String name) {

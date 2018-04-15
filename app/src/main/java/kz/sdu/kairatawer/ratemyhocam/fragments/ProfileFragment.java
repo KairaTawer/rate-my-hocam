@@ -6,23 +6,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.activities.LoginActivity;
+import kz.sdu.kairatawer.ratemyhocam.activities.MyRatingsActivity;
 import kz.sdu.kairatawer.ratemyhocam.activities.RatingAcceptActivity;
+import kz.sdu.kairatawer.ratemyhocam.activities.SavedTeachersActivity;
+import kz.sdu.kairatawer.ratemyhocam.models.FacultyUtil;
 import kz.sdu.kairatawer.ratemyhocam.models.Users;
 
 public class ProfileFragment extends Fragment {
@@ -30,8 +32,16 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database;
-    private DatabaseReference ratingRef, teacherRef;
+    private DatabaseReference ratingRef, userRef;
     Users userUtil;
+
+    Button mAcceptCommentButton;
+    Button mMyRatingsButton;
+    Button mSavedTeachersButton;
+    Button mSignOutButton;
+    TextView mUserFaculty;
+    TextView mUserGraduateYear;
+    TextView mSignInInfo;
 
     public ProfileFragment() {
 
@@ -64,34 +74,25 @@ public class ProfileFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_profile, container, false);
 
         database = FirebaseDatabase.getInstance();
-        teacherRef = database.getReference("Users");
+        userRef = database.getReference("Users");
         ratingRef = database.getReference("Rating");
 
-        final CardView mAdminPanel = view.findViewById(R.id.cardView_adminBar);
-        final Button mAcceptCommentButton = view.findViewById(R.id.button_notAcceptedComments);
+        init(view);
 
-        teacherRef.orderByKey().equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    userUtil = ds.getValue(Users.class);
-                    if (userUtil.isAdmin()) mAdminPanel.setVisibility(View.VISIBLE);
-                }
-            }
+        return view;
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+    public void init(View view) {
 
-        ratingRef.orderByChild("status").equalTo(0).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mAcceptCommentButton.setText("New Ratings  \u2022  " + dataSnapshot.getChildrenCount());
-            }
+        mAcceptCommentButton = view.findViewById(R.id.button_notAcceptedComments);
+        mSavedTeachersButton = view.findViewById(R.id.button_savedTeachers);
+        mMyRatingsButton = view.findViewById(R.id.button_myRatings);
+        mSignOutButton = view.findViewById(R.id.button_signOut);
+        mUserFaculty = view.findViewById(R.id.textView_userFaculty);
+        mUserGraduateYear = view.findViewById(R.id.textView_userGraduateYear);
+        mSignInInfo = view.findViewById(R.id.textView_signInInfo);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+        checkIfAdmin();
 
         mAcceptCommentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,15 +102,61 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button mSignOut =  view.findViewById(R.id.button_signOut);
-        mSignOut.setOnClickListener(new View.OnClickListener() {
+        mMyRatingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyRatingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mSavedTeachersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SavedTeachersActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mSignOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startSignout();
             }
         });
 
-        return view;
+    }
+
+    public void fillAccountInfo() {
+        FacultyUtil facultyUtil = new FacultyUtil();
+        mUserFaculty.setText(facultyUtil.facultyList.get(userUtil.getFaculty()));
+        mUserGraduateYear.setText(userUtil.getGraduateYear() + "");
+        mSignInInfo.setText("You signed in as " + mAuth.getCurrentUser().getEmail());
+    }
+
+    public void checkIfAdmin() {
+
+        userRef.orderByKey().equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    userUtil = ds.getValue(Users.class);
+                    if (userUtil.isAdmin()) mAcceptCommentButton.setVisibility(View.VISIBLE);
+                    fillAccountInfo();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+    }
+
+    private void startSignout() {
+        mAuth.signOut();
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginIntent);
     }
 
     @Override
@@ -121,16 +168,9 @@ public class ProfileFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
-
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(Uri uri);
-    }
 
-    private void startSignout() {
-        mAuth.signOut();
-        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(loginIntent);
     }
 
 }

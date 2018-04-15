@@ -110,6 +110,8 @@ public class ExploreFragment extends Fragment {
 
         DatabaseReference teacherRef = FirebaseDatabase.getInstance().getReference().child("/Teacher");
 
+        teachers.clear();
+
         teacherRef.orderByChild("rating").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

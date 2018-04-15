@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 
 public class FacultyUtil {
-    public HashMap<Integer,String> facultyList;
+    public HashMap<Integer,String> facultyList = new HashMap<>();
 
     public FacultyUtil() {
         facultyList.put(0,"Engineering and Natural Sciences");
