@@ -136,8 +136,8 @@ public class RateTeacherActivity extends AppCompatActivity {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     teacher = ds.getValue(Teacher.class);
                     teacher.setId(ds.getKey());
+                    getSupportActionBar().setTitle(teacher.getName());
                 }
-                getSupportActionBar().setTitle(teacher.getName());
             }
 
             @Override
