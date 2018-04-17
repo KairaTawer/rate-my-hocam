@@ -15,11 +15,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
+import kz.sdu.kairatawer.ratemyhocam.fragments.AboutUsFragment;
 import kz.sdu.kairatawer.ratemyhocam.fragments.ExploreFragment;
 import kz.sdu.kairatawer.ratemyhocam.fragments.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements ExploreFragment.OnFragmentInteractionListener,ProfileFragment.OnFragmentInteractionListener {
+        implements ExploreFragment.OnFragmentInteractionListener,
+                ProfileFragment.OnFragmentInteractionListener,
+                AboutUsFragment.OnFragmentInteractionListener {
 
     private BottomNavigationViewEx mMainNav;
     private FrameLayout mMainFrame;
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity
 
     private ExploreFragment exploreFragment;
     private ProfileFragment profileFragment;
+    private AboutUsFragment aboutUsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity
 
         exploreFragment = new ExploreFragment();
         profileFragment = new ProfileFragment();
+        aboutUsFragment = new AboutUsFragment();
 
         setFragment(exploreFragment);
 
@@ -70,6 +75,9 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     case R.id.action_profile:
                         setFragment(profileFragment);
+                        return true;
+                    case R.id.action_aboutUs:
+                        setFragment(aboutUsFragment);
                         return true;
                     default:
                         return false;

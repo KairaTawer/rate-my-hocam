@@ -10,4 +10,9 @@
         android:id="@+id/action_profile"
         android:icon="@mipmap/ic_person_black_24dp"
         android:title="Profile" />
+    <item
+        android:id="@+id/action_aboutUs"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="About Us" />
+
 </menu>

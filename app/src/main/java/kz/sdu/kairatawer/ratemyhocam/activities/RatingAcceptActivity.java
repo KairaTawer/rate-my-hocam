@@ -83,7 +83,8 @@ public class RatingAcceptActivity extends AppCompatActivity {
 
             @Override
             protected void onBindViewHolder(@NonNull final RatingViewHolder holder, int position, @NonNull final Rating model) {
-                holder.setRating(String.valueOf(model.getRating()));
+                holder.mRatingTextView = holder.itemView.findViewById(R.id.textView_teacher_rating);
+                holder.mRatingTextView.setText(String.valueOf(model.getRating()));
                 holder.setComment(model.getComment());
 
                 teacherRef.orderByKey().equalTo(model.getTeacherId())
@@ -137,7 +138,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
         private ImageView mImage;
 
         public ImageButton mAcceptButton, mRejectButton;
-        public TextView mStatusTextView, mDateTextView;
+        public TextView mStatusTextView, mDateTextView, mRatingTextView;
         public RatingViewHolder(View itemView) {
             super(itemView);
 

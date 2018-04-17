@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,11 +61,14 @@ public class TeacherProfileActivity extends AppCompatActivity {
     TextView mRatingCount;
 
     Teacher teacher;
+    String key;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference teacherRef, ratingRef, savedRef;
     FirebaseRecyclerAdapter adapter;
+
+    Menu mOptionsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +186,8 @@ public class TeacherProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mOptionsMenu = menu;
+
         menu.add("Rate");
         menu.add("Add to Favourite");
 
@@ -196,10 +202,34 @@ public class TeacherProfileActivity extends AppCompatActivity {
             Intent rateIntent = new Intent(TeacherProfileActivity.this, RateTeacherActivity.class);
             rateIntent.putExtra("teacherId", teacher.getId());
             startActivity(rateIntent);
-        } else {
-            String key =  savedRef.push().getKey();
+        } else if(item.getTitle().equals("Add to Favourite")) {
+            key =  savedRef.push().getKey();
             savedRef.child(key).child("userId").setValue(mAuth.getCurrentUser().getUid());
             savedRef.child(key).child("teacherId").setValue(teacher.getId());
+            mOptionsMenu.clear();
+            mOptionsMenu.add("Rate");
+            mOptionsMenu.add("Remove from Favourite");
+            super.onCreateOptionsMenu(mOptionsMenu);
+        } else {
+            Query applesQuery = savedRef.orderByKey().equalTo(key);
+
+            applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                        appleSnapshot.getRef().removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("OnCanceled", "onCancelled", databaseError.toException());
+                }
+            });
+            mOptionsMenu.clear();
+            mOptionsMenu.add("Rate");
+            mOptionsMenu.add("Add to Favourite");
+            super.onCreateOptionsMenu(mOptionsMenu);
         }
         return super.onOptionsItemSelected(item);
     }
