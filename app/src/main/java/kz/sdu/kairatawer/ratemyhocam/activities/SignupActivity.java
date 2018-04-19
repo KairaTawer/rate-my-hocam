@@ -61,8 +61,6 @@ public class SignupActivity extends AppCompatActivity {
         binding.setLogInClicker(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent logInIntent = new Intent(SignupActivity.this,LoginActivity.class);
-                //startActivity(logInIntent);
                 onBackPressed();
             }
         });
@@ -75,7 +73,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
-        binding.spinnerFaculty.setItems("Engineering and Natural Sciences","Law and Social Science","Education and Humanity","Business School");
+        binding.spinnerFaculty.setItems("Инженерия и естественные науки","Юрисприденция и социальные науки","Педагогика и гуманитарные науки","Бизнес-школа");
         binding.spinnerFaculty.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {

@@ -10,10 +10,10 @@ public class FacultyUtil {
     public HashMap<Integer,String> facultyList = new HashMap<>();
 
     public FacultyUtil() {
-        facultyList.put(0,"Engineering and Natural Sciences");
-        facultyList.put(1,"Law and Social Science");
-        facultyList.put(2,"Education and Humanity");
-        facultyList.put(3,"Business School");
+        facultyList.put(0,"Инженерия и естественные науки");
+        facultyList.put(1,"Юрисприденция и социальные науки");
+        facultyList.put(2,"Педагогика и гуманитарные науки");
+        facultyList.put(3,"Бизнес-школа");
     }
 
     public String getFacultyName(int i) {
