@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
+import java.util.ArrayList;
+
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.databinding.ActivitySignupBinding;
 import kz.sdu.kairatawer.ratemyhocam.models.Users;
@@ -35,6 +37,12 @@ public class SignupActivity extends AppCompatActivity {
 
     String email, password;
     int facultyId = 999999,graduateYear = 999999;
+    private static final String[] FACULTY_LIST = {
+            "Инженерия и естественные науки",
+            "Юрисприденция и социальные науки",
+            "Педагогика и гуманитарные науки",
+            "Бизнес-школа"
+    };
 
     AuthDialog mDialog;
 
@@ -47,9 +55,34 @@ public class SignupActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
 
+        init();
+
+        fillSpinners();
+    }
+
+    private void fillSpinners() {
+
+        binding.spinnerGraduateYear.setItems(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024);
+        binding.spinnerGraduateYear.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                graduateYear = (int) item;
+            }
+        });
+
+        binding.spinnerFaculty.setItems(FACULTY_LIST);
+        binding.spinnerFaculty.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                facultyId = (int) id;
+            }
+        });
+    }
+
+    private void init() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_signup);
 
         binding.setSignUpClicker(new View.OnClickListener() {
             @Override
@@ -64,24 +97,7 @@ public class SignupActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        binding.spinnerGraduateYear.setItems(2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024);
-        binding.spinnerGraduateYear.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                graduateYear = (int) item;
-            }
-        });
-
-        binding.spinnerFaculty.setItems("Инженерия и естественные науки","Юрисприденция и социальные науки","Педагогика и гуманитарные науки","Бизнес-школа");
-        binding.spinnerFaculty.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-                facultyId = (int) id;
-            }
-        });
-
-  }
+    }
 
     private void startSignup() {
 
