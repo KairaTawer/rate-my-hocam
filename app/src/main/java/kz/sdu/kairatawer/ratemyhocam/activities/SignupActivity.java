@@ -16,12 +16,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthEmailException;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jaredrummler.materialspinner.MaterialSpinner;
-
-import java.util.ArrayList;
 
 import kz.sdu.kairatawer.ratemyhocam.R;
 import kz.sdu.kairatawer.ratemyhocam.databinding.ActivitySignupBinding;
@@ -117,7 +120,18 @@ public class SignupActivity extends AppCompatActivity {
                                 startActivity(mainIntent);
                             } else {
                                 mDialog = new AuthDialog();
-                                mDialog.showDialog(SignupActivity.this,task.getException().getMessage());
+                                String message = "Проблемы с интернетом.";
+
+                                try {
+                                    throw task.getException();
+                                } catch(FirebaseAuthWeakPasswordException e) {
+                                    message = "Слишком слабый пароль (минимум 6 символов).";
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    message = "Неверный формат почты.";
+                                } catch(Exception e) {
+                                    message = "Почта уже зарегистрирована.";
+                                }
+                                mDialog.showDialog(SignupActivity.this, message);
                             }
                         }
                     });
@@ -130,7 +144,7 @@ public class SignupActivity extends AppCompatActivity {
         password = binding.etPassword.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || facultyId == 999999 || graduateYear == 999999) {
-            Toast.makeText(SignupActivity.this,"All fields are required.",Toast.LENGTH_LONG).show();
+            Toast.makeText(SignupActivity.this,"Все поля обязательны.",Toast.LENGTH_LONG).show();
             return false;
         } else {
             return true;

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.Window;
@@ -19,8 +20,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
@@ -105,12 +111,21 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 mProgress.setVisibility(View.INVISIBLE);
                                 mDialog = new AuthDialog();
-                                mDialog.showDialog(LoginActivity.this,task.getException().getMessage());
+                                String message = "Проблемы с интернетом.";
+
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthInvalidCredentialsException e) {
+                                    message = "Неверный формат почты.";
+                                } catch (FirebaseAuthException e) {
+                                    message = "Введеные данные неправильны.";
+                                } catch (Exception e) {}
+                                mDialog.showDialog(LoginActivity.this, message);
                             }
                         }
                     });
         } else {
-            Toast.makeText(LoginActivity.this, "Fields are empty.",
+            Toast.makeText(LoginActivity.this, "Все поля обязательны.",
                     Toast.LENGTH_SHORT).show();
         }
     }
