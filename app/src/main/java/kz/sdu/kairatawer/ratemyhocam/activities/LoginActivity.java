@@ -64,10 +64,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        setSupportActionBar(null);
+        init();
+    }
 
+    private void init() {
         ButterKnife.bind(this);
 
+        setSupportActionBar(null);
         mAuth = FirebaseAuth.getInstance();
 
         mSignIn.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
                 startLogin();
             }
         });
-
         mSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

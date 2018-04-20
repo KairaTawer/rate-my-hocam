@@ -56,7 +56,7 @@
         android:minWidth="0dp"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
-        android:text="RATE"
+        android:text="Оценить"
         android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
 

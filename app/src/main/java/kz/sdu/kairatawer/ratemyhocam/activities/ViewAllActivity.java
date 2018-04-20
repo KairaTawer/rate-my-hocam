@@ -132,7 +132,7 @@ public class ViewAllActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(ViewAllActivity.this, TeacherProfileActivity.class);
-                        intent.putExtra("teacherId", teacherId);
+                        intent.putExtra("teacherId", model.getId());
                         startActivity(intent);
                     }
                 });

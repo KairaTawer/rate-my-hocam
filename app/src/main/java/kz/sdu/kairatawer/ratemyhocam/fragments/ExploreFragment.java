@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -36,9 +38,6 @@ import kz.sdu.kairatawer.ratemyhocam.activities.ViewAllActivity;
 import kz.sdu.kairatawer.ratemyhocam.adapters.TeachersAdapter;
 import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ExploreFragment extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -47,10 +46,13 @@ public class ExploreFragment extends Fragment {
     RecyclerView mEngineeringList;
     TeachersAdapter adapter;
     Button mViewAllButton;
+    ProgressBar mInitialProgressBar;
+    CardView mCardViewContainer;
 
     ArrayList<Teacher> teachers = new ArrayList<>();
 
-    public ExploreFragment() {}
+    public ExploreFragment() {
+    }
 
     public static ExploreFragment newInstance() {
         ExploreFragment fragment = new ExploreFragment();
@@ -64,7 +66,7 @@ public class ExploreFragment extends Fragment {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() == null) {
+                if (firebaseAuth.getCurrentUser() == null) {
                     Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
                     loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(loginIntent);
@@ -72,16 +74,18 @@ public class ExploreFragment extends Fragment {
             }
         };
 
-        Log.e("onCreate","onCreate");
+        Log.e("onCreate", "onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_explore, container, false);
+        View view = inflater.inflate(R.layout.fragment_explore, container, false);
 
         mEngineeringList = view.findViewById(R.id.recyclerView_eng);
         mViewAllButton = view.findViewById(R.id.button_viewAll);
+        mInitialProgressBar = view.findViewById(R.id.progressBar_initial);
+        mCardViewContainer = view.findViewById(R.id.cardView_container);
 
         mViewAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +95,7 @@ public class ExploreFragment extends Fragment {
             }
         });
 
-        Log.e("onCreateView","onCreateView");
+        Log.e("onCreateView", "onCreateView");
 
         return view;
     }
@@ -115,7 +119,7 @@ public class ExploreFragment extends Fragment {
         teacherRef.orderByChild("rating").limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Teacher teacher = ds.getValue(Teacher.class);
                     Log.d("TAG", teacher.getName());
                     teacher.setId(ds.getKey());
@@ -123,15 +127,19 @@ public class ExploreFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
 
+                mInitialProgressBar.setVisibility(View.GONE);
+                mCardViewContainer.setVisibility(View.VISIBLE);
                 Collections.reverse(teachers);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
         adapter = new TeachersAdapter(getActivity(), teachers);
         mEngineeringList.setAdapter(adapter);
+
     }
 
     public interface OnFragmentInteractionListener {
