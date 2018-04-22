@@ -28,23 +28,12 @@
             android:label="@string/title_activity_teacher_profile"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.RateTeacherActivity" />
-        <activity android:name=".activities.AfterRatingActivity" />
         <activity android:name=".activities.RatingAcceptActivity" />
         <activity
             android:name=".activities.MyRatingsActivity"
             android:label="@string/title_activity_my_ratings"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.SavedTeachersActivity" />
-        <activity
-            android:name=".MyRatingsActivity"
-            android:label="@string/title_activity_my_ratings"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

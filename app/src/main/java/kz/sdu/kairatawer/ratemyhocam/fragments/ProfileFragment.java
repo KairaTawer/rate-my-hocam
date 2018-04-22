@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,13 +37,10 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference ratingRef, userRef;
     Users userUtil;
 
-    Button mAcceptCommentButton;
-    Button mMyRatingsButton;
-    Button mSavedTeachersButton;
-    Button mSignOutButton;
-    TextView mUserFaculty;
-    TextView mUserGraduateYear;
-    TextView mSignInInfo;
+    Button mAcceptCommentButton, mSavedTeachersButton, mSignOutButton, mMyRatingsButton;
+    TextView mUserFaculty, mSignInInfo, mUserGraduateYear;
+    RelativeLayout mContentContainer;
+    ProgressBar mInitialProgressBar;
 
     public ProfileFragment() {
 
@@ -59,7 +58,7 @@ public class ProfileFragment extends Fragment {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() == null) {
+                if (firebaseAuth.getCurrentUser() == null) {
                     Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
                     loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(loginIntent);
@@ -71,7 +70,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         database = FirebaseDatabase.getInstance();
         userRef = database.getReference("Users");
@@ -91,6 +90,8 @@ public class ProfileFragment extends Fragment {
         mUserFaculty = view.findViewById(R.id.textView_userFaculty);
         mUserGraduateYear = view.findViewById(R.id.textView_userGraduateYear);
         mSignInInfo = view.findViewById(R.id.textView_signInInfo);
+        mContentContainer = view.findViewById(R.id.relativeLayout_container);
+        mInitialProgressBar = view.findViewById(R.id.progressBar_initial);
 
         checkIfAdmin();
 
@@ -132,6 +133,8 @@ public class ProfileFragment extends Fragment {
         mUserFaculty.setText(facultyUtil.facultyList.get(userUtil.getFaculty()));
         mUserGraduateYear.setText(userUtil.getGraduateYear() + "");
         mSignInInfo.setText("You signed in as " + mAuth.getCurrentUser().getEmail());
+        mContentContainer.setVisibility(View.VISIBLE);
+        mInitialProgressBar.setVisibility(View.GONE);
     }
 
     public void checkIfAdmin() {
@@ -139,7 +142,7 @@ public class ProfileFragment extends Fragment {
         userRef.orderByKey().equalTo(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     userUtil = ds.getValue(Users.class);
                     if (userUtil.isAdmin()) mAcceptCommentButton.setVisibility(View.VISIBLE);
                     fillAccountInfo();
@@ -147,7 +150,8 @@ public class ProfileFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
     }
@@ -168,6 +172,7 @@ public class ProfileFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
     public interface OnFragmentInteractionListener {
         public void onFragmentInteraction(Uri uri);
 

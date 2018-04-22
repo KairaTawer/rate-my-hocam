@@ -38,7 +38,6 @@ public class TeachersAdapter extends RecyclerView.Adapter<ViewAllActivity.Teache
     public void onBindViewHolder(@NonNull final ViewAllActivity.TeacherViewHolder holder, final int position) {
         final Teacher currentTeacher = teachers.get(position);
         holder.setName(currentTeacher.getName());
-        holder.setPosition(currentTeacher.getPosition());
         holder.setRating(currentTeacher.getRating());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

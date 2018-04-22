@@ -133,8 +133,7 @@ public class ExploreFragment extends Fragment {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
         adapter = new TeachersAdapter(getActivity(), teachers);

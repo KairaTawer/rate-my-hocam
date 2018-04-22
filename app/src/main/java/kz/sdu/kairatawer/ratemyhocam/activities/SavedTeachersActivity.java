@@ -108,7 +108,6 @@ public class SavedTeachersActivity extends AppCompatActivity {
                                     teacher = ds.getValue(Teacher.class);
                                     holder.setName(teacher.getName());
                                     holder.setRating(teacher.getRating());
-                                    holder.setPosition(teacher.getPosition());
                                     teacher.setId(ds.getKey());
                                     holder.mView.setOnClickListener(new View.OnClickListener() {
                                         @Override

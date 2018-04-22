@@ -125,7 +125,6 @@ public class ViewAllActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final TeacherViewHolder holder, int position, @NonNull final Teacher model) {
                 holder.setName(model.getName());
                 holder.setRating(model.getRating());
-                holder.setPosition(model.getPosition());
                 teacherId = getRef(position).getKey();
                 model.setId(teacherId);
                 holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -171,12 +170,6 @@ public class ViewAllActivity extends AppCompatActivity {
             TextView mRating = mView.findViewById(R.id.textView_teacher_name);
 
             mRating.setText(name);
-        }
-
-        public void setPosition(String position) {
-            TextView mPosition = mView.findViewById(R.id.textView_teacher_position);
-
-            mPosition.setText(position);
         }
 
     }
