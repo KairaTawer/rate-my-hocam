@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,23 +44,13 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import kz.sdu.kairatawer.ratemyhocam.R;
+import kz.sdu.kairatawer.ratemyhocam.adapters.PagerAdapter;
 import kz.sdu.kairatawer.ratemyhocam.models.FacultyUtil;
 import kz.sdu.kairatawer.ratemyhocam.models.Rating;
 import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 import kz.sdu.kairatawer.ratemyhocam.models.Users;
 
 public class TeacherProfileActivity extends AppCompatActivity {
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.recyclerView_ratings)
-    RecyclerView mRatingList;
-    @BindView(R.id.textView_teacher_rating)
-    TextView mRating;
-    @BindView(R.id.ratingBar_rating)
-    RatingBar mRatingBar;
-    @BindView(R.id.textView_ratingCount)
-    TextView mRatingCount;
 
     Teacher teacher;
     String key;
@@ -68,14 +60,10 @@ public class TeacherProfileActivity extends AppCompatActivity {
     DatabaseReference teacherRef, ratingRef, savedRef;
     FirebaseRecyclerAdapter adapter;
 
-    Menu mOptionsMenu;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_profile);
-
-        ButterKnife.bind(this);
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -89,148 +77,50 @@ public class TeacherProfileActivity extends AppCompatActivity {
             }
         };
 
-        init();
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Teacher Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
-    public void init() {
+        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout.addTab(tabLayout.newTab().setText("Review"));
+        tabLayout.addTab(tabLayout.newTab().setText("Ratings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Courses"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        mRatingList.setLayoutManager(new LinearLayoutManager(this));
-
-        teacherRef = FirebaseDatabase.getInstance().getReference("Teacher");
-        ratingRef = FirebaseDatabase.getInstance().getReference("Rating");
-        savedRef = FirebaseDatabase.getInstance().getReference("SavedTeacher");
-
-        teacherRef.orderByKey().equalTo(getIntent().getStringExtra("teacherId"))
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        FacultyUtil facultyUtil = new FacultyUtil();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            teacher = ds.getValue(Teacher.class);
-                            getSupportActionBar().setTitle(teacher.getName());
-                            getSupportActionBar().setSubtitle(facultyUtil.getFacultyName(teacher.getFacultyId()));
-                            mRating.setText(String.valueOf(String.format("%.1f", teacher.getRating())));
-                            mRatingBar.setRating(teacher.getRating());
-                            mRatingCount.setText(teacher.getRatingCount() + "");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-
-        Query ratingQuery = ratingRef.orderByChild("teacherId").equalTo(getIntent().getStringExtra("teacherId"));
-
-        FirebaseRecyclerOptions<Rating> options =
-                new FirebaseRecyclerOptions.Builder<Rating>()
-                        .setQuery(ratingQuery, Rating.class)
-                        .build();
-
-        adapter = new FirebaseRecyclerAdapter<Rating, RatingAcceptActivity.RatingViewHolder>(options) {
-            @NonNull
+        final ViewPager viewPager = findViewById(R.id.viewpager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public RatingAcceptActivity.RatingViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.rating_list_item, parent, false);
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-                return new RatingAcceptActivity.RatingViewHolder(view);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final RatingAcceptActivity.RatingViewHolder holder, int position, @NonNull final Rating model) {
-                holder.setRating(String.valueOf(model.getRating()));
-                holder.setComment(model.getComment());
-                holder.mStatusTextView = holder.itemView.findViewById(R.id.textView_status);
-                holder.mStatusTextView.setVisibility(View.GONE);
+            public void onTabReselected(TabLayout.Tab tab) {
 
-                teacherRef.orderByKey().equalTo(model.getTeacherId())
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                    teacher = ds.getValue(Teacher.class);
-                                    teacher.setId(ds.getKey());
-                                    holder.setName(teacher.getName());
-                                    holder.setImage(teacher.getImage());
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
             }
-        };
-
-        mRatingList.setAdapter(adapter);
-
+        });
     }
 
     @Override
     protected void onStart() {
-        adapter.startListening();
+        //adapter.startListening();
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        adapter.stopListening();
+        //adapter.stopListening();
         super.onStop();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        mOptionsMenu = menu;
-
-        menu.add("Rate");
-        menu.add("Add to Favourite");
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }  else if(item.getTitle().equals("Rate")) {
-            Intent rateIntent = new Intent(TeacherProfileActivity.this, RateTeacherActivity.class);
-            rateIntent.putExtra("teacherId", teacher.getId());
-            startActivity(rateIntent);
-        } else if(item.getTitle().equals("Add to Favourite")) {
-            key =  savedRef.push().getKey();
-            savedRef.child(key).child("userId").setValue(mAuth.getCurrentUser().getUid());
-            savedRef.child(key).child("teacherId").setValue(teacher.getId());
-            mOptionsMenu.clear();
-            mOptionsMenu.add("Rate");
-            mOptionsMenu.add("Remove from Favourite");
-            super.onCreateOptionsMenu(mOptionsMenu);
-        } else {
-            Query applesQuery = savedRef.orderByKey().equalTo(key);
-
-            applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                        appleSnapshot.getRef().removeValue();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.e("OnCanceled", "onCancelled", databaseError.toException());
-                }
-            });
-            mOptionsMenu.clear();
-            mOptionsMenu.add("Rate");
-            mOptionsMenu.add("Add to Favourite");
-            super.onCreateOptionsMenu(mOptionsMenu);
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
