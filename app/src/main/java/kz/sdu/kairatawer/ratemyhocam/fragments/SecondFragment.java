@@ -57,26 +57,27 @@ public class SecondFragment extends Fragment {
 
         ratingRef = FirebaseDatabase.getInstance().getReference("Rating");
 
-        ratings.clear();
+        if(ratings.isEmpty()){
+            ratingRef.orderByChild("teacherId").equalTo(getArguments().getString("teacherId"))
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                Rating rating = ds.getValue(Rating.class);
+                                if(rating.getStatus() == 1) ratings.add(rating);
+                                adapter.notifyDataSetChanged();
+                            }
 
-        ratingRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Rating teacher = ds.getValue(Rating.class);
-                    ratings.add(teacher);
-                    adapter.notifyDataSetChanged();
-                }
+                        }
 
-            }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-
-        adapter = new RatingsAdapter(getActivity(), ratings);
-        mRatingsList.setAdapter(adapter);
-        mRatingsList.setLayoutManager(new LinearLayoutManager(getContext()));
+            adapter = new RatingsAdapter(getActivity(), ratings);
+            mRatingsList.setAdapter(adapter);
+            mRatingsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
 
         super.onActivityCreated(savedInstanceState);
     }

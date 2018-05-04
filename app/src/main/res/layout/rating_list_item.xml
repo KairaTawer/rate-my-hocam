@@ -1,81 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp">
+    android:layout_marginBottom="16dp">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp">
-
-        <ImageView
-            android:id="@+id/imageView_teacher"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView_teacher_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:text="Professor Name"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintLeft_toRightOf="@id/imageView_teacher" />
+        android:orientation="vertical">
 
         <RatingBar
             android:id="@+id/ratingBar_rating"
-            style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/imageView_teacher"
-            app:layout_constraintStart_toStartOf="@id/textView_teacher_name"
-            app:layout_constraintTop_toBottomOf="@id/textView_teacher_name" />
-
-        <TextView
-            android:id="@+id/textView_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Accepted"
-            android:textAllCaps="true"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView_comment" />
-
-        <TextView
-            android:id="@+id/textView_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif-light"
-            android:text="23 Feb"
-            app:layout_constraintBottom_toBottomOf="@id/imageView_teacher"
-            app:layout_constraintStart_toEndOf="@id/ratingBar_rating"
-            app:layout_constraintTop_toBottomOf="@id/textView_teacher_name" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp" />
 
         <kz.sdu.kairatawer.ratemyhocam.ui.ExpandableTextView
             android:id="@+id/textView_comment"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:text="@string/loremIpsum"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageView_teacher" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/loremIpsum" />
 
-    </android.support.constraint.ConstraintLayout>
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#ececec" />
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/textView_ratingDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="23 Feb" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textView_ratingDate"
+                android:layout_marginStart="16dp"
+                android:text="EN201"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

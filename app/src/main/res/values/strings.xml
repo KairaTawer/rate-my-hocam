@@ -10,6 +10,19 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <array name="faculties">
+        <item>Инжфак</item>
+        <item>Юрфак</item>
+        <item>Филфак</item>
+        <item>Экономфак</item>
+    </array>
+    <array name="positions">
+        <item>Декан</item>
+        <item>Старший преподаватель</item>
+        <item>Преподаватель</item>
+        <item>Ассистент-профессор</item>
+        <item>Профессор</item>
+    </array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

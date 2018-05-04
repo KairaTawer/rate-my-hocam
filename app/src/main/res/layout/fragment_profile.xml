@@ -13,7 +13,7 @@
             android:id="@+id/relativeLayout_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cardView_adminBar"
@@ -27,19 +27,6 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/button_notAcceptedComments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:drawableLeft="@drawable/ic_new_releases_black_24dp"
-                        android:drawablePadding="8dp"
-                        android:gravity="start|center_vertical"
-                        android:padding="16dp"
-                        android:text="New ratings"
-                        android:textAllCaps="false"
-                        android:visibility="gone" />
-
-                    <Button
                         android:id="@+id/button_myRatings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -48,7 +35,7 @@
                         android:drawablePadding="8dp"
                         android:gravity="start|center_vertical"
                         android:padding="16dp"
-                        android:text="My ratings"
+                        android:text="Мои рейтинги"
                         android:textAllCaps="false" />
 
                     <Button
@@ -60,8 +47,21 @@
                         android:drawablePadding="8dp"
                         android:gravity="start|center_vertical"
                         android:padding="16dp"
-                        android:text="Saved teachers"
+                        android:text="Сохраненные учителя"
                         android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_notAcceptedComments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableLeft="@drawable/ic_settings_black_24dp"
+                        android:drawablePadding="8dp"
+                        android:gravity="start|center_vertical"
+                        android:padding="16dp"
+                        android:text="Админ-панель"
+                        android:textAllCaps="false"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -88,7 +88,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Your Faculty"
+                            android:text="Ваш факультет"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -111,7 +111,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Graduate Year"
+                            android:text="Год выпуска"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -158,6 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:layout_marginTop="160dp" />
 
     </LinearLayout>

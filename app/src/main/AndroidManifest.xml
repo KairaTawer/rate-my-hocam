@@ -34,6 +34,7 @@
             android:label="@string/title_activity_my_ratings"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.SavedTeachersActivity" />
+        <activity android:name=".activities.CreateTeacherActivity"></activity>
     </application>
 
 </manifest>

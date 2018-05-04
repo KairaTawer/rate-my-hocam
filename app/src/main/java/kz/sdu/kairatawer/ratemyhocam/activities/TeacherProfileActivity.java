@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -49,16 +51,17 @@ import kz.sdu.kairatawer.ratemyhocam.models.FacultyUtil;
 import kz.sdu.kairatawer.ratemyhocam.models.Rating;
 import kz.sdu.kairatawer.ratemyhocam.models.Teacher;
 import kz.sdu.kairatawer.ratemyhocam.models.Users;
+import kz.sdu.kairatawer.ratemyhocam.ui.CircleTransform;
 
 public class TeacherProfileActivity extends AppCompatActivity {
 
     Teacher teacher;
-    String key;
+
+    ImageView mTeacherImage;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    DatabaseReference teacherRef, ratingRef, savedRef;
-    FirebaseRecyclerAdapter adapter;
+    DatabaseReference teacherRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,20 +80,38 @@ public class TeacherProfileActivity extends AppCompatActivity {
             }
         };
 
+        teacherRef = FirebaseDatabase.getInstance().getReference("Teacher");
+
         Toolbar toolbar = findViewById(R.id.toolbar);
+        mTeacherImage = findViewById(R.id.header);
+        TabLayout tabLayout = findViewById(R.id.tabs);
+
+        teacherRef.orderByKey().equalTo(getIntent().getStringExtra("teacherId"))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            teacher = ds.getValue(Teacher.class);
+                            Picasso.get().load(teacher.getImage()).into(mTeacherImage);
+                            getSupportActionBar().setTitle(teacher.getName());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Teacher Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Review"));
-        tabLayout.addTab(tabLayout.newTab().setText("Ratings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Courses"));
+        tabLayout.addTab(tabLayout.newTab().setText("Рейтинг"));
+        tabLayout.addTab(tabLayout.newTab().setText("Комменты"));
+        tabLayout.addTab(tabLayout.newTab().setText("Курсы"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.viewpager);
         final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+                (getSupportFragmentManager(), tabLayout.getTabCount(), getIntent().getStringExtra("teacherId"));
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
