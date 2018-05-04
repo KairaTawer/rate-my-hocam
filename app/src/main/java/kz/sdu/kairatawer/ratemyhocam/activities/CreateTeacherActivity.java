@@ -2,6 +2,7 @@ package kz.sdu.kairatawer.ratemyhocam.activities;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -177,6 +178,12 @@ public class CreateTeacherActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("В процессе");
+        progressDialog.setMessage("Учитель добавляется в базу данных...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         StorageReference mountainImagesRef = storageRef.child("images/" + UUID.randomUUID() + ".jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
@@ -208,9 +215,8 @@ public class CreateTeacherActivity extends AppCompatActivity {
 
         teacherRef.child(key).setValue(teacherRecord);
 
-        String sKey = teacherCourseRef.push().getKey();
-
         for (String selectedCourse : selectedCourses) {
+            String sKey = teacherCourseRef.push().getKey();
             teacherCourseRef.child(sKey).child("teacherId").setValue(key);
             for (Course course : coursesList) {
                 if (selectedCourse.equals(course.getName())) {

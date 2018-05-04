@@ -82,7 +82,7 @@ public class ViewAllActivity extends AppCompatActivity {
                 if (currentUser != null)
                     Log.e("user info retrieved", mAuth.getCurrentUser().getUid());
                 if (currentUser.isAdmin()) {
-                    mMenu.add(0, 1, Menu.NONE, "Add")
+                    mMenu.add(0, 999, Menu.NONE, "Add")
                             .setIcon(R.drawable.ic_add_black_24dp)
                             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM);
                     Log.e("admin", "youreadmin");
@@ -244,14 +244,12 @@ public class ViewAllActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, MainActivity.class);
         switch (item.getItemId()) {
-            case android.R.id.home:
-                Intent backIntent = new Intent(ViewAllActivity.this, MainActivity.class);
-                startActivity(backIntent);
-            case 1:
-                Intent intent = new Intent(ViewAllActivity.this, CreateTeacherActivity.class);
-                startActivity(intent);
+            case 999:
+                intent = new Intent(ViewAllActivity.this, CreateTeacherActivity.class);
         }
+        startActivity(intent);
         return super.onOptionsItemSelected(item);
     }
 
