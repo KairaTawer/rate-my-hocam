@@ -58,6 +58,8 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'us.belka:androidtoggleswitch:1.2.2'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'org.apmem.tools:layouts:1.10@aar'
+    implementation 'com.nex3z:flow-layout:1.2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

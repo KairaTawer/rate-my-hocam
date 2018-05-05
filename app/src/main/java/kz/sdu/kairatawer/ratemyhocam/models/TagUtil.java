@@ -7,11 +7,17 @@ public class TagUtil {
 
     public TagUtil(ArrayList<String> tagList) {
         this.tagList = tagList;
-        this.tagList.add("");
-        this.tagList.add("");
-        this.tagList.add("");
-        this.tagList.add("");
-        this.tagList.add("");
+        this.tagList.add("Справедливые оценки");
+        this.tagList.add("Изи ретейк");
+        this.tagList.add("Аттенданс важен");
+        this.tagList.add("Много читать");
+        this.tagList.add("Групповой проект");
+        this.tagList.add("Интересные лекции");
+        this.tagList.add("Вдохновляет");
+        this.tagList.add("Куча домашки");
+        this.tagList.add("Веселый учитель");
+        this.tagList.add("Много куизов");
+        this.tagList.add("Сложные экзамены");
     }
 
     public ArrayList<String> getTagList() {

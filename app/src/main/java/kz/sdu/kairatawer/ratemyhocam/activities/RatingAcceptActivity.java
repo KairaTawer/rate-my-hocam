@@ -111,7 +111,7 @@ public class RatingAcceptActivity extends AppCompatActivity {
                 holder.mAcceptButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        float updatedRatingAveral = teacher.getRatingAverall() + model.getRating();
+                        float updatedRatingAveral = teacher.getRatingOverall() + model.getRating();
                         int updatedRatingCount = teacher.getRatingCount() + 1;
                         ratingRef.child(model.getId()).child("status").setValue(1);
                         teacherRef.child(model.getTeacherId()).child("rating").setValue(updatedRatingAveral / updatedRatingCount);
